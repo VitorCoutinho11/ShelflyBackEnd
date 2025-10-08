@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Table(name = "usuario")
 @Entity
 public class Usuario {
     @Id
@@ -26,6 +28,12 @@ public class Usuario {
 
     @Column(name = "usuario_status")
     private int status;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinTable(name="usuario_role",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id"))
+    private List<Role> roles;
 
     public int getStatus() {
         return status;
@@ -73,5 +81,13 @@ public class Usuario {
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }
