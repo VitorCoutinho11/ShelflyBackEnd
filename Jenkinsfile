@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage('Verificar Repositório') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], useRemoteConfigs: [[url: 'https://github.com/Gustasilvadev/getmoney-ControleFinanceiro']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], useRemoteConfigs: [[url: 'https://github.com/VitorCoutinho11/ShelflyBackEnd.git']]])
             }
         }
 
@@ -21,7 +21,7 @@ pipeline {
         stage('Construir Imagem Docker') {
             steps {
                 script {
-                    def appName = 'getmoney'
+                    def appName = 'ShelflyBackEnd'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     // Construir a imagem Docker
@@ -33,7 +33,7 @@ pipeline {
         stage('Fazer Deploy') {
             steps {
                 script {
-                    def appName = 'shelfly'
+                    def appName = 'ShelflyBackEnd'
                     def imageTag = "${appName}:${env.BUILD_ID}"
 
                     // Parar e remover o container existente, se houver
