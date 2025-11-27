@@ -7,6 +7,7 @@ import com.senac.ShelflyBackEnd.dto.response.UsuarioDTOResponse;
 import com.senac.ShelflyBackEnd.dto.response.UsuarioLivroDTOResponse;
 import com.senac.ShelflyBackEnd.entity.Marcacao;
 import com.senac.ShelflyBackEnd.entity.UsuarioLivro;
+import com.senac.ShelflyBackEnd.enums.Status; // 🚨 Importe o Enum
 import com.senac.ShelflyBackEnd.repository.MarcacaoRepository;
 import com.senac.ShelflyBackEnd.repository.UsuarioLivroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class MarcacaoService {
         novaMarcacao.setUsuarioLivro(usuarioLivro);
         novaMarcacao.setPagina(marcacaoDTORequest.getPagina());
         novaMarcacao.setAnotacao(marcacaoDTORequest.getAnotacao());
+        // 🚨 CORREÇÃO: Passa o objeto Enum diretamente
         novaMarcacao.setStatus(marcacaoDTORequest.getStatus());
         novaMarcacao.setData(LocalDateTime.now());
 
@@ -51,15 +53,24 @@ public class MarcacaoService {
     public MarcacaoDTOResponse atualizarMarcacao(Integer id, MarcacaoDTORequest dto) {
         Marcacao marcacaoExistente = listarPorId(id);
 
-        if (dto.getPagina() != 0) {
+        // 🚨 LÓGICA CORRIGIDA: Comparar com 0 (int) não funciona mais,
+        // mas verificar se a página é > 0 é um bom sinal de que o valor deve ser atualizado.
+        if (dto.getPagina() != null && dto.getPagina() > 0) { // Adicionando null check para Integer
             marcacaoExistente.setPagina(dto.getPagina());
         }
+
+        // CORREÇÃO: Verifica se o campo de anotação foi enviado (não é nulo e não está vazio)
         if (dto.getAnotacao() != null && !dto.getAnotacao().isBlank()) {
             marcacaoExistente.setAnotacao(dto.getAnotacao());
         }
-        if (dto.getStatus() != 0) {
+
+        // 🚨 LÓGICA CORRIGIDA: Agora verificamos se o Enum foi fornecido no DTO (não é null).
+        // Se o DTO tem um status, atualizamos o status existente.
+        if (dto.getStatus() != null) {
             marcacaoExistente.setStatus(dto.getStatus());
         }
+        // Se a lógica fosse verificar se o status é ATIVA, faríamos:
+        // if (dto.getStatus() == EntityStatus.ATIVA) { ... }
 
         Marcacao marcacaoSalva = marcacaoRepository.save(marcacaoExistente);
 
@@ -73,7 +84,9 @@ public class MarcacaoService {
         resposta.setPagina(marcacao.getPagina());
         resposta.setAnotacao(marcacao.getAnotacao());
         resposta.setData(marcacao.getData());
-        resposta.setStatus(marcacao.getStatus());
+
+
+        resposta.setStatus(Status.fromCodigo(marcacao.getStatus().ordinal()));
 
         // Mapeia o UsuarioLivro, preenchendo todos os campos, incluindo os DTOs aninhados
         UsuarioLivroDTOResponse usuarioLivroDto = new UsuarioLivroDTOResponse();

@@ -1,7 +1,7 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
 import com.senac.ShelflyBackEnd.enums.Status;
-import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
+
 
 public class MarcacaoDTORequest {
 

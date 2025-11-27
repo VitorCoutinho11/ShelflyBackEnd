@@ -5,6 +5,7 @@ import com.senac.ShelflyBackEnd.dto.LoginUserDto;
 import com.senac.ShelflyBackEnd.dto.RecoveryJwtTokenDto;
 import com.senac.ShelflyBackEnd.entity.Role;
 import com.senac.ShelflyBackEnd.entity.Usuario;
+import com.senac.ShelflyBackEnd.enums.Status;
 import com.senac.ShelflyBackEnd.repository.UsuarioRepository;
 // Removido o import de org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Lazy;
@@ -70,7 +71,7 @@ public class UsuarioRoleService implements UserDetailsService {
         newUser.setSenha(passwordEncoder.encode(createUserDto.password()));
 
         newUser.setData(createUserDto.data());
-        newUser.setStatus(createUserDto.status());
+        newUser.setStatus(Status.fromCodigo(createUserDto.status()));
         newUser.setRoles(List.of(role));
 
         usuarioRoleRepository.save(newUser);
