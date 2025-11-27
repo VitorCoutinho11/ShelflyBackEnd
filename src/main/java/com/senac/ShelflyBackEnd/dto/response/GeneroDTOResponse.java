@@ -1,16 +1,18 @@
 package com.senac.ShelflyBackEnd.dto.response;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+
 public class GeneroDTOResponse {
 
     private int id;
     private String nome;
-    private int status;
+    private Status status;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

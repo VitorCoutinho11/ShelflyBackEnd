@@ -1,11 +1,13 @@
 package com.senac.ShelflyBackEnd.dto.response;
 
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
+
 import java.time.LocalDateTime;
 
 public class UsuarioLivroDTOResponse {
 
     private int id;
-    private Integer status;
+    private UsuarioLivroStatus status;
     private Double nota;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
@@ -21,11 +23,11 @@ public class UsuarioLivroDTOResponse {
         this.id = id;
     }
 
-    public Integer getStatus() {
+    public UsuarioLivroStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(UsuarioLivroStatus status) {
         this.status = status;
     }
 

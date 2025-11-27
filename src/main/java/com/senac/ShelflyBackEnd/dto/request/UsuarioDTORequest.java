@@ -1,5 +1,8 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
+
 import java.time.LocalDateTime;
 
 public class UsuarioDTORequest {
@@ -8,13 +11,13 @@ public class UsuarioDTORequest {
     private String email;
     private String senha;
     private LocalDateTime data;
-    private int status;
+    private Status status;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

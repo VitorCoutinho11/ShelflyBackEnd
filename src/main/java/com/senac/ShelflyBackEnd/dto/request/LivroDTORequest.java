@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+
 import java.time.LocalDateTime;
 
 public class LivroDTORequest {
@@ -10,7 +12,7 @@ public class LivroDTORequest {
     private String descricao;
     private String capa;
     private Integer generoId; // <-- mantém como Integer (pode ser null)
-    private Integer status;
+    private Status status;
     private LocalDateTime dataCadastro;
 
     public LocalDateTime getDataCadastro() {
@@ -21,11 +23,11 @@ public class LivroDTORequest {
         this.dataCadastro = dataCadastro;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

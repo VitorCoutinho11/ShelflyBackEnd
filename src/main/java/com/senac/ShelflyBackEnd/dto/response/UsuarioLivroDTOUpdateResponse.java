@@ -1,5 +1,6 @@
 package com.senac.ShelflyBackEnd.dto.response;
 
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,7 +11,7 @@ public class UsuarioLivroDTOUpdateResponse {
     @NotEmpty
     @Min(0)
     @Max(2)
-    private int status;
+    private UsuarioLivroStatus status;
 
     public int getId() {
         return id;
@@ -18,11 +19,12 @@ public class UsuarioLivroDTOUpdateResponse {
     public void setId(int id) {
         this.id = id;
     }
-    public int getStatus() {
+
+    public UsuarioLivroStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(UsuarioLivroStatus status) {
         this.status = status;
     }
 }

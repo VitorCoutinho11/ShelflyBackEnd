@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+
 import java.time.LocalDateTime;
 
 public class AvaliacaoDTORequest {
@@ -8,7 +10,7 @@ public class AvaliacaoDTORequest {
     private String comentario;
     private int usuarioId;
     private int livroId;
-    private int status;
+    private Status status;
     private LocalDateTime dataAvaliacao;
 
     public LocalDateTime getDataAvaliacao() {
@@ -19,11 +21,11 @@ public class AvaliacaoDTORequest {
         this.dataAvaliacao = dataAvaliacao;
     }
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

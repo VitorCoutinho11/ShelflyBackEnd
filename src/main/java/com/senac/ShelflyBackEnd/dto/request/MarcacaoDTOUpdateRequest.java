@@ -1,13 +1,16 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
-public class MarcacaoDTOUpdateRequest {
-    private int status;
+import com.senac.ShelflyBackEnd.enums.Status;
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
 
-    public int getStatus() {
+public class MarcacaoDTOUpdateRequest {
+    private Status status;
+
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

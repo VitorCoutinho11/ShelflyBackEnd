@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.dto.response;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+
 import java.time.LocalDateTime;
 
 public class LivroDTOResponse {
@@ -12,7 +14,7 @@ public class LivroDTOResponse {
     private String capa;
     private LocalDateTime dataCadastro;
     private GeneroDTOResponse genero;
-    private Integer status;
+    private Status status;
 
     public Integer getPublicacao() {
         return publicacao;
@@ -22,11 +24,11 @@ public class LivroDTOResponse {
         this.publicacao = publicacao;
     }
 
-    public Integer getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

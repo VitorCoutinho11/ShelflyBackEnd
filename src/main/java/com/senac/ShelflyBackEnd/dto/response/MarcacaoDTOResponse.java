@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.dto.response;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+
 import java.time.LocalDateTime;
 
 public class MarcacaoDTOResponse {
@@ -9,13 +11,13 @@ public class MarcacaoDTOResponse {
     private String anotacao;
     private LocalDateTime data;
     private UsuarioLivroDTOResponse usuarioLivro;
-    private int status;
+    private Status status;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

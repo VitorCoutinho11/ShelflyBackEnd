@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.entity;
 
+import com.senac.ShelflyBackEnd.enums.Status;
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -26,16 +28,16 @@ public class Marcacao {
     private UsuarioLivro usuarioLivro;
 
     @Column(name = "marcacao_status")
-    private int status;
+    private Status status;
 
     @Column(name = "marcacao_leitura")
     private int leitura;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

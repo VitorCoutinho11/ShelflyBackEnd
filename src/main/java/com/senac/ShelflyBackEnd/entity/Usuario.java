@@ -1,5 +1,6 @@
 package com.senac.ShelflyBackEnd.entity;
 
+import com.senac.ShelflyBackEnd.enums.Status;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -27,7 +28,7 @@ public class Usuario {
     private LocalDateTime data;
 
     @Column(name = "usuario_status")
-    private int status;
+    private Status status;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(name="usuario_role",
@@ -35,11 +36,11 @@ public class Usuario {
             inverseJoinColumns = @JoinColumn(name="role_id"))
     private List<Role> roles;
 
-    public int getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -1,6 +1,7 @@
 package com.senac.ShelflyBackEnd.entity;
 
 import com.senac.ShelflyBackEnd.entity.Genero;
+import com.senac.ShelflyBackEnd.enums.Status;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,15 @@ public class Livro {
     private Genero genero;
 
     @Column(name = "livro_status")
-    private Integer status;
+    private Status status;
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;
@@ -101,11 +110,4 @@ public class Livro {
         this.genero = genero;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }

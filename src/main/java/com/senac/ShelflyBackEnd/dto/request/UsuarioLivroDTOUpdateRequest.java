@@ -1,13 +1,15 @@
 package com.senac.ShelflyBackEnd.dto.request;
 
-public class UsuarioLivroDTOUpdateRequest {
-    private int status;
+import com.senac.ShelflyBackEnd.enums.UsuarioLivroStatus;
 
-    public int getStatus() {
+public class UsuarioLivroDTOUpdateRequest {
+    private UsuarioLivroStatus status;
+
+    public UsuarioLivroStatus getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(UsuarioLivroStatus status) {
         this.status = status;
     }
 }

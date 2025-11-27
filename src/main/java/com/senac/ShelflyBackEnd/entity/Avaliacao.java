@@ -1,5 +1,6 @@
 package com.senac.ShelflyBackEnd.entity;
 
+import com.senac.ShelflyBackEnd.enums.Status;
 import jakarta.persistence.*;
 
 import java.awt.*;
@@ -31,13 +32,14 @@ public class Avaliacao {
     private Livro livro;
 
     @Column(name = "avaliacao_status")
-    private int status;
+    private Status status;
 
-    public int getStatus() {
+
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
