@@ -2,6 +2,7 @@ package com.senac.ShelflyBackEnd.controller;
 
 import com.senac.ShelflyBackEnd.dto.request.UsuarioLivroDTORequest;
 import com.senac.ShelflyBackEnd.dto.response.UsuarioLivroDTOResponse;
+import com.senac.ShelflyBackEnd.entity.Livro;
 import com.senac.ShelflyBackEnd.entity.UsuarioLivro;
 import com.senac.ShelflyBackEnd.service.UsuarioLivroService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,8 +53,9 @@ public class UsuarioLivroController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<UsuarioLivro>> verUsuarioLivros() {
-        return ResponseEntity.ok(usuarioLivroService.listarUsuarioLivros());
+    @GetMapping("/listar/{id}")
+    @Operation(summary = "Listar usuariolivro por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public UsuarioLivro listarUsuarioLivroPorId(@PathVariable Integer id) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return usuarioLivroService.listarPorId(id);
     }
 }

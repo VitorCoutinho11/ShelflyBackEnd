@@ -8,7 +8,9 @@ import com.senac.ShelflyBackEnd.repository.GeneroRepository;
 import com.senac.ShelflyBackEnd.repository.LivroRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -60,7 +62,7 @@ public class LivroService {
 
     public LivroDTOResponse atualizarLivro(Integer id, LivroDTORequest dto) {
         // 1. Encontrar o Livro existente pelo ID
-        Livro livroExistente = listarPorId(id);
+        Livro livroExistente = buscarLivroPorId(id);
 
         // 2. Mapear os campos do DTO para a entidade manualmente
         if (dto.getTitulo() != null) {
@@ -104,8 +106,15 @@ public class LivroService {
         livroRepository.deleteById(id);
     }
 
-    public Livro listarPorId(Integer id) {
+    public Livro buscarLivroPorId(Integer id) {
+        // Usa o .findById do Spring Data JPA, que retorna um Optional.
         return livroRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Livro não encontrado: " + id));
+                // Se o livro não existir, lança uma exceção com status 404 NOT FOUND.
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Livro não encontrado com o ID: " + id
+                ));
     }
+
+
 }

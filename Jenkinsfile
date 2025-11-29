@@ -1,5 +1,16 @@
 pipeline {
     agent any
+
+    environment {
+        APP_NAME = 'shelflybackend'
+        ANDROID_HOME = '/opt/android-sdk'
+        GRADLE_USER_HOME = "${env.WORKSPACE}/.gradle"
+    }
+
+    tools {
+        nodejs 'node-18'
+    }
+
     stages {
         stage('Verificar Repositório') {
             steps {
@@ -7,51 +18,63 @@ pipeline {
             }
         }
 
-        stage('Instalar Dependências') {
+        stage('Instalar Dependências Backend') {
             steps {
                 script {
-                    // Atualiza o PATH se necessário
-                    env.PATH = "/usr/bin:$PATH"
-                    // Instalar as dependências Maven antes de compilar o projeto
-                    bat 'mvn clean install'  // Instala as dependências do Maven
+                    dir('backend') {
+                       bat 'mvn clean install -DskipTests'
+                    }
                 }
             }
         }
 
-        stage('Construir Imagem Docker') {
+        stage('Construir Imagem Docker Backend') {
             steps {
                 script {
-                    def appName = 'shelflybackend'
-                    def imageTag = "${appName}:${env.BUILD_ID}"
-
-                    // Construir a imagem Docker
-                    bat "docker build -t ${imageTag} ."
+                    def imageTag = "${env.APP_NAME}:${env.BUILD_ID}"
+                    dir('backend') {
+                        bat "docker build -t ${imageTag} ."
+                    }
                 }
             }
         }
 
-        stage('Fazer Deploy') {
+        stage('Fazer Deploy Backend') {
             steps {
                 script {
-                    def appName = 'shelflybackend'
-                    def imageTag = "${appName}:${env.BUILD_ID}"
-
-                    // Parar e remover o container existente, se houver
-            		bat "docker stop ${appName} || exit 0"
-            		bat "docker rm -v ${appName} || exit 0"  // Remover o container e os volumes associados
-
-                    // Executar o novo container
                     bat "docker-compose up -d --build"
                 }
             }
         }
+
+        stage('Compilar APK Release') {
+            steps {
+                script {
+                    dir('mobile') {
+
+                        bat 'npm install'
+
+                        dir('android') {
+                            bat 'gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Arquivar APK') {
+            steps {
+                archiveArtifacts artifacts: 'mobile/android/app/build/outputs/apk/release/app-release.apk', onlyIfSuccessful: true
+            }
+        }
     }
+
     post {
         success {
-            echo 'Deploy realizado com sucesso!'
+            echo 'Deploy e Build do APK concluídos com sucesso!'
         }
         failure {
-            echo 'Houve um erro durante o deploy.'
+            echo 'Houve um erro durante o deploy ou a compilação do APK.'
         }
     }
 }

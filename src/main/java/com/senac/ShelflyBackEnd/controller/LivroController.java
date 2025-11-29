@@ -53,8 +53,9 @@ public class LivroController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<Livro>> verLivros() {
-        return ResponseEntity.ok(livroService.listarLivros());
+    @GetMapping("/listar/{livroId}")
+    @Operation(summary = "Listar livro por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public Livro listarLivroPorId(@PathVariable Integer livroId) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return livroService.buscarLivroPorId(livroId);
     }
 }

@@ -5,6 +5,7 @@ import com.senac.ShelflyBackEnd.dto.LoginUserDto;
 import com.senac.ShelflyBackEnd.dto.RecoveryJwtTokenDto;
 import com.senac.ShelflyBackEnd.dto.request.UsuarioDTORequest;
 import com.senac.ShelflyBackEnd.dto.response.UsuarioDTOResponse;
+import com.senac.ShelflyBackEnd.entity.Livro;
 import com.senac.ShelflyBackEnd.entity.Usuario;
 import com.senac.ShelflyBackEnd.service.UsuarioRoleService;
 import com.senac.ShelflyBackEnd.service.UsuarioService;
@@ -36,39 +37,6 @@ public class UsuarioController {
     }
 
     // ----------------------------------------------------------------------------------------------
-    // --- Endpoints de Autenticação e Teste (Login/Cadastro) ---
-    // ----------------------------------------------------------------------------------------------
-
-    @PostMapping("/login")
-    public ResponseEntity<RecoveryJwtTokenDto> authenticateUser(@RequestBody LoginUserDto loginUserDto) {
-        RecoveryJwtTokenDto token = usuarioRoleService.authenticateUser(loginUserDto);
-        return new ResponseEntity<>(token, HttpStatus.OK);
-    }
-
-    // Cadastro em POST api/usuario
-    @PostMapping
-    public ResponseEntity<Void> createUser(@RequestBody CreateUserDto createUserDto) {
-        usuarioRoleService.createUser(createUserDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<String> getAuthenticationTest() {
-        return new ResponseEntity<>("Autenticado com sucesso", HttpStatus.OK);
-    }
-
-    @GetMapping("/test/customer")
-    public ResponseEntity<String> getCustomerAuthenticationTest() {
-        return new ResponseEntity<>("Cliente autenticado com sucesso", HttpStatus.OK);
-    }
-
-    @GetMapping("/test/administrator")
-    public ResponseEntity<String> getAdminAuthenticationTest() {
-        return new ResponseEntity<>("Administrador autenticado com sucesso", HttpStatus.OK);
-    }
-
-
-    // ----------------------------------------------------------------------------------------------
     // --- Endpoints de Gerenciamento de Usuários (CRUD) ---
     // ----------------------------------------------------------------------------------------------
 
@@ -98,8 +66,9 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<Usuario>> verUsuarios() {
-        return ResponseEntity.ok(usuarioService.listarUsuarios());
+    @GetMapping("/listar/{usuarioId}")
+    @Operation(summary = "Listar usuario por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public Usuario listarUsuarioPorId(@PathVariable Integer usuarioId) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return usuarioService.listarPorId(usuarioId);
     }
 }

@@ -3,6 +3,7 @@ package com.senac.ShelflyBackEnd.controller;
 import com.senac.ShelflyBackEnd.dto.request.AvaliacaoDTORequest;
 import com.senac.ShelflyBackEnd.dto.response.AvaliacaoDTOResponse;
 import com.senac.ShelflyBackEnd.entity.Avaliacao;
+import com.senac.ShelflyBackEnd.entity.Livro;
 import com.senac.ShelflyBackEnd.service.AvaliacaoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,8 +53,9 @@ public class AvaliacaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<Avaliacao>> verAvaliacoes() {
-        return ResponseEntity.ok(avaliacaoService.listarAvaliacoes());
+    @GetMapping("/listar/{avaliacaoId}")
+    @Operation(summary = "Listar avaliacao por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public Avaliacao listarAvaliacaoPorId(@PathVariable Integer avaliacaoId) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return avaliacaoService.listarPorId(avaliacaoId);
     }
 }

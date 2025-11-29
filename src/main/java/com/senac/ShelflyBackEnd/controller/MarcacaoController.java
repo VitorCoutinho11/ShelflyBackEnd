@@ -2,6 +2,7 @@ package com.senac.ShelflyBackEnd.controller;
 
 import com.senac.ShelflyBackEnd.dto.request.MarcacaoDTORequest;
 import com.senac.ShelflyBackEnd.dto.response.MarcacaoDTOResponse;
+import com.senac.ShelflyBackEnd.entity.Livro;
 import com.senac.ShelflyBackEnd.entity.Marcacao;
 import com.senac.ShelflyBackEnd.service.MarcacaoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,8 +53,9 @@ public class MarcacaoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<Marcacao>> verMarcacoes() {
-        return ResponseEntity.ok(marcacaoService.listarMarcacoes());
+    @GetMapping("/listar/{marcacaoId}")
+    @Operation(summary = "Listar marcacao por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public Marcacao listarMarcacaoPorId(@PathVariable Integer marcacaoId) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return marcacaoService.listarPorId(marcacaoId);
     }
 }

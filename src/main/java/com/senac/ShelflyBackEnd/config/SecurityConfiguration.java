@@ -20,6 +20,11 @@ public class SecurityConfiguration {
     @Autowired
     private UserAuthenticationFilter userAuthenticationFilter;
 
+    // --- Definição das Roles Simplificadas ---
+    public static final String ROLE_USUARIO = "USUARIO";
+    public static final String ROLE_ADMIN = "ADMIN"; // A role mais alta
+
+    // --- ENDPOINTS PÚBLICOS ---
     public static final String [] ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED = {
             "/h2-console",
             // 🔓 Swagger/OpenAPI UI
@@ -30,20 +35,25 @@ public class SecurityConfiguration {
             "/users/login"
     };
 
-    // Endpoints que requerem autenticação para serem acessados
-    public static final String [] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
-            "api/usuario/test"
+    // --- ENDPOINTS COM ACESSO RESTRITO POR ROLE ---
+
+    // 1. ENDPOINTS para ROLE_USUARIO
+
+    public static final String [] ENDPOINTS_USUARIO_LEVEL = {
+            // Inclui permissão para criar livros, marcações e avaliações (POST/GET/PUT/DELETE nos próprios)
+            "/api/avaliacao/criar",
+            "/api/avaliacao/atualizar/{avaliacaoId}",
+            "/api/avaliacao/apagar/{avaliacaoId}",
+            "/api/livro/criar",
+            "/api/livro/atualizar/{livroId}",
+            "/api/livro/apagar/{livroId}",
+            "/api/marcacao/criar",
+            "/api/marcacao/apagar/{marcacaoId}",
+            "/api/marcacao/atualizar/{marcacaoId}",
+
     };
 
-    // Endpoints que só podem ser acessador por usuários com permissão de cliente
-    public static final String [] ENDPOINTS_CUSTOMER = {
-            "api/usuario/customer"
-    };
 
-    // Endpoints que só podem ser acessador por usuários com permissão de administrador
-    public static final String [] ENDPOINTS_ADMIN = {
-            "api/usuario/administrator"
-    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -51,11 +61,22 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Permissões públicas (NÃO REQUER AUTENTICAÇÃO)
                         .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_NOT_REQUIRED).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() //adicionado para funcionamento do swagger
-                        .requestMatchers(ENDPOINTS_ADMIN).hasRole("ADMINISTRATOR")
-                        .requestMatchers(ENDPOINTS_CUSTOMER).hasRole("CUSTOMER")
-                        .requestMatchers(ENDPOINTS_WITH_AUTHENTICATION_REQUIRED).authenticated()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        // 2. Permissões Específicas:
+
+                        // USUARIO LEVEL: Acessível por ROLE_USUARIO E ROLE_ADMIN
+                        // Uso de hasAnyRole para conceder acesso cumulativo ao ADMIN
+                        .requestMatchers(ENDPOINTS_USUARIO_LEVEL).hasAnyRole(ROLE_USUARIO, ROLE_ADMIN)
+
+                        // 3. Permissão Curinga para ROLE_ADMIN:
+                        // Qualquer outra rota na API ("/**") exige ROLE_ADMIN.
+                        // Esta regra deve vir antes do denyAll().
+                        .requestMatchers("/**").hasRole(ROLE_ADMIN)
+
+                        // 4. Bloqueio padrão (qualquer outra requisição é negada)
                         .anyRequest().denyAll()
                 )
                 .addFilterBefore(userAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

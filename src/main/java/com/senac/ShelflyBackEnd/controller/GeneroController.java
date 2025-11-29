@@ -3,6 +3,7 @@ package com.senac.ShelflyBackEnd.controller;
 import com.senac.ShelflyBackEnd.dto.request.GeneroDTORequest;
 import com.senac.ShelflyBackEnd.dto.response.GeneroDTOResponse;
 import com.senac.ShelflyBackEnd.entity.Genero;
+import com.senac.ShelflyBackEnd.entity.Livro;
 import com.senac.ShelflyBackEnd.service.GeneroService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -52,8 +53,9 @@ public class GeneroController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/ver")
-    public ResponseEntity<List<Genero>> verGeneros() {
-        return ResponseEntity.ok(generoService.listarGeneros());
+    @GetMapping("/listar/{generoId}")
+    @Operation(summary = "Listar genero por ID", description = "Endpoint para buscar um livro específico pelo seu ID")
+    public Genero listarGeneroPorId(@PathVariable Integer generoId) { // <-- CORRIGIDO: Agora usa 'livroId'
+        return generoService.listarPorId(generoId);
     }
 }

@@ -1,5 +1,7 @@
 package com.senac.ShelflyBackEnd.enums;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Status {
     APAGADO(-1),
     INATIVO(0),
@@ -11,6 +13,7 @@ public enum Status {
         this.codigo = codigo;
     }
 
+    @JsonValue
     public Integer getCodigo() {
         return codigo;
     }
