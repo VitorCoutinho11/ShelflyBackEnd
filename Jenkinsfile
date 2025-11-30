@@ -3,17 +3,14 @@ pipeline {
 
     environment {
         APP_NAME = 'shelflybackend'
-        ANDROID_HOME = '/opt/android-sdk'
-        GRADLE_USER_HOME = "${env.WORKSPACE}/.gradle"
-    }
-
-    tools {
-        nodejs 'node-18'
+        // PATH do Maven é importante para a build na máquina do Jenkins
+        MAVEN_HOME = '/usr/local/maven' // AJUSTE SE NECESSÁRIO
     }
 
     stages {
         stage('Verificar Repositório') {
             steps {
+                // Seu repositório principal
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], useRemoteConfigs: [[url: 'https://github.com/VitorCoutinho11/shelflybackend']]])
             }
         }
@@ -21,50 +18,36 @@ pipeline {
         stage('Instalar Dependências Backend') {
             steps {
                 script {
-                    dir('backend') {
-                       bat 'mvn clean install -DskipTests'
-                    }
+                   // Usamos bat (Windows) ou sh (Linux/macOS) - Mude se o agente for Linux
+                   bat 'mvn clean install -DskipTests'
                 }
             }
         }
 
-        stage('Construir Imagem Docker Backend') {
+        stage('Construir Imagem Docker') {
             steps {
                 script {
                     def imageTag = "${env.APP_NAME}:${env.BUILD_ID}"
-                    dir('backend') {
-                        bat "docker build -t ${imageTag} ."
-                    }
+
+                    // O build deve ser executado da raiz para que o Docker acesse as subpastas 'backend' e 'mobile'
+                    // O Dockerfile faz todo o trabalho de build do JAR e do APK
+                    bat "docker build -t ${imageTag} ."
                 }
             }
         }
 
-        stage('Fazer Deploy Backend') {
+        stage('Fazer Deploy') {
             steps {
                 script {
-                    bat "docker-compose up -d --build"
+                    def appName = "${env.APP_NAME}"
+
+                    // Parar e remover o container existente
+                    bat "docker stop ${appName} || echo 0"
+                    bat "docker rm -v ${appName} || echo 0"
+
+                    // Rodar o novo container (você pode usar docker-compose se tiver um)
+                    bat "docker run -d --name ${appName} -p 8411:8411 ${appName}:${env.BUILD_ID}"
                 }
-            }
-        }
-
-        stage('Compilar APK Release') {
-            steps {
-                script {
-                    dir('mobile') {
-
-                        bat 'npm install'
-
-                        dir('android') {
-                            bat 'gradlew assembleRelease -PreactNativeArchitectures=arm64-v8a'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Arquivar APK') {
-            steps {
-                archiveArtifacts artifacts: 'mobile/android/app/build/outputs/apk/release/app-release.apk', onlyIfSuccessful: true
             }
         }
     }
@@ -72,9 +55,10 @@ pipeline {
     post {
         success {
             echo 'Deploy e Build do APK concluídos com sucesso!'
+            echo 'Acesse a página de download do APK em: http://seu-servidor:8411/'
         }
         failure {
-            echo 'Houve um erro durante o deploy ou a compilação do APK.'
+            echo 'Houve um erro durante o deploy ou a compilação. Verifique o console.'
         }
     }
 }
